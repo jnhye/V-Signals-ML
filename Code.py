@@ -244,8 +244,8 @@ def draw_styled_landmarks(image, results):
 
         if left_shoulder is not None and left_elbow is not None and left_wrist is not None:
             left_arm_angle_value = calculate_angle(left_shoulder, left_elbow, left_wrist)
-            if 130 <= left_arm_angle_value <= 180 and left_torso_angle != "LEFT TORSO: point missing!" and
-                    60 <= float(left_torso_angle.split(': ')[1]) <= 120:
+            if (130 <= left_arm_angle_value <= 180 and left_torso_angle != "LEFT TORSO: point missing!" and
+                    60 <= float(left_torso_angle.split(': ')[1]) <= 120):
                 left_sign = "POINT"
             elif (130 <= left_arm_angle_value <= 180 and left_torso_angle != "LEFT TORSO: point missing!" and
                   15 <= float(left_torso_angle.split(': ')[1]) < 80):
