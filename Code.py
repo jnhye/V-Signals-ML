@@ -16,7 +16,7 @@ def mediapipe_detection(image, model):
     image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
     return image, results
 
-
+# Angle Calculation
 def calculate_angle(point1, point2, point3):
     vector1 = np.subtract(point1, point2)
     vector2 = np.subtract(point3, point2)
@@ -27,6 +27,7 @@ def calculate_angle(point1, point2, point3):
     return np.degrees(angle)
 
 
+# Finger Angle Calculation
 def calculate_finger_angles(hand_landmarks):
     # Calculate angles between the palm (wrist) and fingers
     angles = {}
@@ -57,7 +58,7 @@ def draw_styled_landmarks(image, results):
                 return None
         return None
 
-    # Numbering
+    # Numbering Landmarks
     if results.pose_landmarks:
         for idx, landmark in enumerate(results.pose_landmarks.landmark):
             cv2.putText(image, str(idx), (int(landmark.x * image.shape[1]), int(landmark.y * image.shape[0])),
@@ -114,7 +115,7 @@ def draw_styled_landmarks(image, results):
                         (10, 300 + 20 * list(left_finger_angles.keys()).index(finger)),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
 
-    # Error
+    # Error Handling / Point Missing
     if right_shoulder is None or right_elbow is None or right_wrist is None:
         right_arm_angle = "RIGHT ARM: point missing!"
     else:
@@ -145,7 +146,7 @@ def draw_styled_landmarks(image, results):
     else:
         left_wrist_angle = f"LEFT WRIST: {calculate_angle(left_elbow, left_wrist, left_hand):.2f}"
 
-    # Display
+    # Display Angles
     cv2.putText(image, str(left_wrist_angle), (10, 75), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2)
     cv2.putText(image, str(right_wrist_angle), (10, 95), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2)
     cv2.putText(image, str(right_arm_angle), (10, 115), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2)
@@ -154,7 +155,7 @@ def draw_styled_landmarks(image, results):
     cv2.putText(image, str(left_torso_angle), (10, 175), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2)
 
     # *** Signals ***
-    # Touch
+    # Two Hands Touch (Tips of Fingers)
     if results.right_hand_landmarks and results.left_hand_landmarks:
         right_hand_points = [
             results.right_hand_landmarks.landmark[i] for i in [8, 12, 16]
@@ -168,7 +169,7 @@ def draw_styled_landmarks(image, results):
                         abs(right_point.z - left_point.z) < 0.07):  # Adjust threshold
                     cv2.putText(image, "touch!", (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
-    # Crossed Close to Body
+    # Hands Close to Body
     if right_shoulder is not None and left_shoulder is not None:
         chest_top = (right_shoulder[1] + left_shoulder[1]) / 2
         chest_bottom = chest_top + 0.4
@@ -187,12 +188,12 @@ def draw_styled_landmarks(image, results):
             if left_hand_close:
                 cv2.putText(image, "LEFT close!", (10, 450), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
 
-    # Right or Left
-    # Midpoints
+    # Right/Left Hands on Right/Left Side
+    # Midpoints to Decide Right/Left Halves
     if right_shoulder is not None and left_shoulder is not None and right_hip is not None and left_hip is not None:
         upper_midpoint = (right_shoulder + left_shoulder) / 2
         lower_midpoint = (right_hip + left_hip) / 2
-        # Visuals for R/L
+        # Visuals for Half Line
         cv2.line(image,
                  (int(upper_midpoint[0] * image.shape[1]), int(upper_midpoint[1] * image.shape[0])),
                  (int(lower_midpoint[0] * image.shape[1]), int(lower_midpoint[1] * image.shape[0])),
@@ -216,6 +217,7 @@ def draw_styled_landmarks(image, results):
             else:
                 return "ON THE LINE"
 
+        # Right Hand R/L Side
         if right_hand is not None:
             right_hand_side = determine_side(right_hand, upper_midpoint, lower_midpoint)
             if right_hand_side == "RIGHT":
@@ -223,6 +225,7 @@ def draw_styled_landmarks(image, results):
             elif right_hand_side == "RIGHT":
                 cv2.putText(image, "RIGHT on R!", (300, 220), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
+        # Left Hand R/L Side
         if left_hand is not None:
             left_hand_side = determine_side(left_hand, upper_midpoint, lower_midpoint)
             if left_hand_side == "LEFT":
@@ -255,7 +258,7 @@ def draw_styled_landmarks(image, results):
             cv2.putText(image, f"RIGHT: {right_sign}", (10, 500), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
             cv2.putText(image, f"LEFT: {left_sign}", (10, 540), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
 
-        # OUT if not END GAME
+        # Out if Not END GAME
         right_out = "NOT OUT"
         left_out = "NOT OUT"
 
@@ -318,7 +321,7 @@ def draw_styled_landmarks(image, results):
                 if right_out == "OUT" and left_out == "OUT":
                     cv2.putText(image, "OUT!", (10, 580), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
-
+# Run Testing
 def runTesting():
     cap = cv2.VideoCapture(1)
     with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5) as holistic:
