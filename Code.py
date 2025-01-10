@@ -236,19 +236,19 @@ def draw_styled_landmarks(image, results):
         if right_shoulder is not None and right_elbow is not None and right_wrist is not None:
             right_arm_angle_value = calculate_angle(right_shoulder, right_elbow, right_wrist)
             if (130 <= right_arm_angle_value <= 180 and right_torso_angle != "RIGHT TORSO: point missing!" and
-                    80 <= float(right_torso_angle.split(': ')[1]) <= 150):
+                    60 <= float(right_torso_angle.split(': ')[1]) <= 120):
                 right_sign = "POINT"
             elif (130 <= right_arm_angle_value <= 180 and right_torso_angle != "RIGHT TORSO: point missing!" and
-                  30 <= float(right_torso_angle.split(': ')[1]) < 80):
+                  15 <= float(right_torso_angle.split(': ')[1]) < 80):
                 right_sign = "IN"
 
         if left_shoulder is not None and left_elbow is not None and left_wrist is not None:
             left_arm_angle_value = calculate_angle(left_shoulder, left_elbow, left_wrist)
-            if 130 <= left_arm_angle_value <= 180 and left_torso_angle != "LEFT TORSO: point missing!" and 80 <= float(
-                    left_torso_angle.split(': ')[1]) <= 150:
+            if 130 <= left_arm_angle_value <= 180 and left_torso_angle != "LEFT TORSO: point missing!" and
+                    60 <= float(left_torso_angle.split(': ')[1]) <= 120:
                 left_sign = "POINT"
-            elif (130 <= left_arm_angle_value <= 180 and left_torso_angle != "LEFT TORSO: point missing!"
-                  and 30 <= float(left_torso_angle.split(': ')[1]) < 80):
+            elif (130 <= left_arm_angle_value <= 180 and left_torso_angle != "LEFT TORSO: point missing!" and
+                  15 <= float(left_torso_angle.split(': ')[1]) < 80):
                 left_sign = "IN"
 
             # Display Nothing / In / Point
