@@ -219,9 +219,9 @@ def draw_styled_landmarks(image, results):
         if right_hand is not None:
             right_hand_side = determine_side(right_hand, upper_midpoint, lower_midpoint)
             if right_hand_side == "RIGHT":
-                cv2.putText(image, "RIGHT on R!", (300, 220), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
+                cv2.putText(image, "RIGHT on L!", (300, 220), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
             elif right_hand_side == "RIGHT":
-                cv2.putText(image, "RIGHT on L!", (300, 220), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+                cv2.putText(image, "RIGHT on R!", (300, 220), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
         if left_hand is not None:
             left_hand_side = determine_side(left_hand, upper_midpoint, lower_midpoint)
